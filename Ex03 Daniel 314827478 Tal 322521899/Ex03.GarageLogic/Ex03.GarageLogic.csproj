@@ -39,19 +39,24 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BatterySource.cs" />
+    <Compile Include="Battery.cs" />
     <Compile Include="Car.cs" />
     <Compile Include="eCarColor.cs" />
     <Compile Include="eFuelType.cs" />
+    <Compile Include="ElectricCar.cs" />
+    <Compile Include="ElectricMotorcycle.cs" />
     <Compile Include="eLicenseType.cs" />
     <Compile Include="EnergySource.cs" />
     <Compile Include="eNumberOfDoors.cs" />
     <Compile Include="eVehicleStatus.cs" />
-    <Compile Include="FuelTank.cs" />
+    <Compile Include="FuelCar.cs" />
+    <Compile Include="FuelMotorcycle.cs" />
+    <Compile Include="Fuel.cs" />
     <Compile Include="GarageManager.cs" />
     <Compile Include="Motorcycle.cs" />
     <Compile Include="Tire.cs" />
     <Compile Include="Truck.cs" />
+    <Compile Include="ValueRangeException.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="VehicleInfo.cs" />
   </ItemGroup>

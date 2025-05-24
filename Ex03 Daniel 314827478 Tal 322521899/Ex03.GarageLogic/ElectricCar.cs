@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    internal class Car : Vehicle
+    internal class ElectricCar : Car
     {
-        private eCarColor? m_CarColor;
+        public ElectricCar(string i_LicenseID, string i_ModelName) : base(i_LicenseID, i_ModelName)
+        { 
 
-        public Car(string i_ModelName, string i_LicenseNumber) : base(i_ModelName, i_LicenseNumber)
-        {
         }
+        
     }
 }
