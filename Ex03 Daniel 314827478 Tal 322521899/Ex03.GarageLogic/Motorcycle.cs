@@ -9,10 +9,25 @@ namespace Ex03.GarageLogic
     internal class Motorcycle : Vehicle
     {
         private eLicenseType? m_LicenseType;
-        private readonly int r_EngineVolume;
+        private int r_EngineVolume;
+        private const int k_NumberOfWheels = 2;
+        private const float k_MaxAirPressure = 30f;
 
-        public Motorcycle(string i_ModelName, string i_LicenseNumber) : base(i_ModelName, i_LicenseNumber)
+        public Motorcycle(string i_ModelName, string i_LicenseNumber, EnergySource i_energySource) : base(i_ModelName, i_LicenseNumber,
+            createTiresList(), i_energySource)
         {
+        }
+
+        public static List<Tire> createTiresList()
+        {
+            List<Tire> tiresList = new List<Tire>();
+
+            for (int i = 0; i < k_NumberOfWheels ; i++)
+            {
+                tiresList[i] = new Tire(k_MaxAirPressure);
+            }
+
+            return tiresList;
         }
     }
 }

@@ -9,6 +9,9 @@ namespace Ex03.GarageLogic
 {
     internal class Battery : EnergySource
     {
+        public Battery(float i_CurrentEnergyLeft, float i_MaxEnergyAmount) : base(i_CurrentEnergyLeft, i_MaxEnergyAmount) { }
+        
+
         protected override void AddEnergyToVehicle(float i_EnergyToAdd)
         {
             chargeVehicle(i_EnergyToAdd);

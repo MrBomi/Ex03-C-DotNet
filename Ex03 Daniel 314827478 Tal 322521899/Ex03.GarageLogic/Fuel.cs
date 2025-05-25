@@ -8,7 +8,12 @@ namespace Ex03.GarageLogic
 {
     internal class Fuel : EnergySource
     {
-        private eFuelType? m_FuelType;
+        private eFuelType m_FuelType;
+
+        public Fuel(float i_CurrentEnergyLeft, float i_MaxEnergyAmount, eFuelType i_FuelType) : base(i_CurrentEnergyLeft, i_MaxEnergyAmount) 
+        {
+            m_FuelType = i_FuelType;
+        }
 
         protected override void AddEnergyToVehicle(float i_EnergyToAdd)
         {

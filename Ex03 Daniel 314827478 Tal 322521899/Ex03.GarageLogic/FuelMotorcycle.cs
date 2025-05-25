@@ -8,9 +8,10 @@ namespace Ex03.GarageLogic
 {
     internal class FuelMotorcycle : Motorcycle
     {
-        public FuelMotorcycle(string i_ModelName, string i_LicenseNumber) : base(i_ModelName, i_LicenseNumber)
-        {
-            this.m_EnergySource = new Fuel();
-        }
+        private const float k_MaxFuelTank = 5.8f;
+
+        public FuelMotorcycle(string i_LicenseID, string i_ModelName) :
+            base(i_ModelName, i_LicenseID, new Fuel(0, k_MaxFuelTank, eFuelType.Octan98))
+        { }
     }
 }

@@ -4,9 +4,14 @@ namespace Ex03.GarageLogic
 {
     internal class Tire
     {
-        private readonly string r_ManufacturerName;
+        private string m_ManufacturerName;
         private float m_CurrentAirPressure;
         private readonly float m_MaxAirPressure;
+
+        internal Tire(float i_MaxAirPressure)
+        {
+            m_MaxAirPressure = i_MaxAirPressure;
+        }
 
         internal void InflateTire(float i_AirPressureToadd)
         {

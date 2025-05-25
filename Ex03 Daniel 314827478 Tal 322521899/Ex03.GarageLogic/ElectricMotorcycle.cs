@@ -8,9 +8,10 @@ namespace Ex03.GarageLogic
 {
     internal class ElectricMotorcycle : Motorcycle
     {
-        public ElectricMotorcycle(string i_ModelName, string i_LicenseNumber) : base(i_ModelName, i_LicenseNumber)
-        {
-            this.m_EnergySource = new Battery();
-        }
+        private const float k_MaxBatteryTimeInHours = 3.2f;
+
+        public ElectricMotorcycle(string i_LicenseID, string i_ModelName) :
+            base(i_ModelName, i_LicenseID, new Battery(0, k_MaxBatteryTimeInHours))
+        { }
     }
 }
