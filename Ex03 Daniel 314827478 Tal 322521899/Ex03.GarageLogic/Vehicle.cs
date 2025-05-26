@@ -13,7 +13,21 @@ namespace Ex03.GarageLogic
         private float m_EnergyPrecentageLeft;
         private List<Tire> m_VehicleTires;
         protected EnergySource m_EnergySource { get; set; }
-
+        
+        public EnergySource EnergySource
+        {
+            get
+            {
+                return m_EnergySource;
+            }
+        }   
+        public List<Tire> Tires
+        {
+            get
+            {
+                return m_VehicleTires;
+            }
+        }
 
         public Vehicle(string i_ModelName, string i_LicenseNumber,  List<Tire> i_VehiclesTires, EnergySource i_energySource)
         {
@@ -27,6 +41,23 @@ namespace Ex03.GarageLogic
         private float calculateEnergyPrecentage()
         {
             return m_EnergySource.m_CurrentEnergyLeft / m_EnergySource.m_MaxEnergyAmount;
+        }
+
+        public override string ToString()
+        {
+            string vehicleDetails = string.Format(
+                "Model Name: {0}\nLicense Number: {1}\nEnergy Percentage Left: {2:P2}\nTires:\n",
+                r_ModelName, r_LicenseNumber, m_EnergyPrecentageLeft.ToString());
+
+            foreach (Tire tire in m_VehicleTires)
+            {
+                vehicleDetails += string.Format("{Manufacturer: {0}",
+                    tire.ToString());
+            }
+
+            vehicleDetails += string.Format("Energy Source: {0}\n", m_EnergySource.ToString());
+
+            return vehicleDetails;
         }
     }
 }

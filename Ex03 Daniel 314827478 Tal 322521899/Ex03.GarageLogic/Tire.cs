@@ -8,9 +8,37 @@ namespace Ex03.GarageLogic
         private float m_CurrentAirPressure;
         private readonly float m_MaxAirPressure;
 
-        internal Tire(float i_MaxAirPressure)
+        public float MaxAirPressure
+        {
+            get
+            {
+                return m_MaxAirPressure;
+            }
+        }   
+
+        public float CurrentAirPressure
+        {
+            get
+            {
+                return m_CurrentAirPressure;
+            }
+            set
+            {
+                if (value < 0 || value > m_MaxAirPressure)
+                {
+                    throw new ValueRangeException(m_MaxAirPressure, 0, 
+                        string.Format($"The air pressure range of that tire is {0} - {m_MaxAirPressure}")); 
+                }
+                else
+                {
+                    m_CurrentAirPressure = value;
+                }
+            }
+        }
+        internal Tire(float i_MaxAirPressure, string i_ManufactureName)
         {
             m_MaxAirPressure = i_MaxAirPressure;
+            m_ManufacturerName = i_ManufactureName;
         }
 
         internal void InflateTire(float i_AirPressureToadd)
@@ -26,6 +54,13 @@ namespace Ex03.GarageLogic
             {
                 m_CurrentAirPressure = PressureAfterUpdate;
             }
+        }
+
+        public override string ToString()
+        {
+            string tireDetails = string.Format("{Manufacturer: {0}, Current Air Pressure: {1}\n}",
+                    m_ManufacturerName, m_CurrentAirPressure.ToString());
+            return tireDetails;
         }
     }
 }

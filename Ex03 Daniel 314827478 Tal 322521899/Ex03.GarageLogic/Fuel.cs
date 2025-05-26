@@ -10,6 +10,13 @@ namespace Ex03.GarageLogic
     {
         private eFuelType m_FuelType;
 
+        public eFuelType FuelType
+        {
+            get
+            {
+                return m_FuelType;
+            }
+        }
         public Fuel(float i_CurrentEnergyLeft, float i_MaxEnergyAmount, eFuelType i_FuelType) : base(i_CurrentEnergyLeft, i_MaxEnergyAmount) 
         {
             m_FuelType = i_FuelType;
@@ -51,5 +58,9 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public override string ToString()
+        {
+            return string.Format("Fuel: {0} liters left , max enregy amount is {1} liters and the fuel type is {2}", m_CurrentEnergyLeft, m_MaxEnergyAmount, m_FuelType.ToString());
+        }
     }
 }

@@ -18,6 +18,7 @@ namespace Ex03.GarageLogic
         }
 
         protected abstract void AddEnergyToVehicle(float i_EnergyToAdd);
+        public abstract override string ToString();
     }
 
 }
