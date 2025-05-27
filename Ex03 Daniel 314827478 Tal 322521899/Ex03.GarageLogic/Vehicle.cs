@@ -24,6 +24,41 @@ namespace Ex03.GarageLogic
             m_EnergySource = i_energySource;
         }
 
+        public virtual void initVehicle(string i_FisrtSpecificPropertie, string i_SecoundSpecificPropertie)
+        {
+        }
+
+        public virtual void ValidateGarageEntryConditions()
+        {
+        }
+
+        public void SetEnergyPrecentageLeft(string i_EnergyPrecentageLeft)
+        {
+            if (float.TryParse(i_EnergyPrecentageLeft, out float energyPercentage))
+            {
+                m_EnergyPrecentageLeft = energyPercentage;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid energy percentage input.");
+            }
+        }
+        public void SetTiresData(string manufacturerName, string airPressure)
+        {
+            if (!float.TryParse(airPressure, out float airPressureValue))
+            {
+                throw new ArgumentException("Invalid air pressure input.");
+            }
+            else
+            {
+                foreach (Tire tire in m_VehicleTires)
+                {
+                    tire.ManufacturerName = manufacturerName;
+                    tire.CurrentAirPressure = airPressureValue;
+                }
+            }
+        }
+
         public EnergySource EnergySource
         {
             get

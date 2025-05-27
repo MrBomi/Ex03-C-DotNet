@@ -18,6 +18,26 @@ namespace Ex03.GarageLogic
         {
         }
 
+        public override void initVehicle(string i_LicenseType, string i_EngineVolume)
+        {
+            if (Enum.TryParse(i_LicenseType, out eLicenseType licenseType))
+            {
+                m_LicenseType = licenseType;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid license type.");
+            }
+            if (int.TryParse(i_EngineVolume, out int engineVolume))
+            {
+                r_EngineVolume = engineVolume;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid engine volume.");
+            }
+        }
+
         public static List<Tire> createTiresList()
         {
             List<Tire> tiresList = new List<Tire>();

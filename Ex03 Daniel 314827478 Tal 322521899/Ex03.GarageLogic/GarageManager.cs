@@ -11,82 +11,50 @@ namespace Ex03.GarageLogic
     {
         private readonly Dictionary<string, VehicleInfo> r_GarageVehicles = new Dictionary<string, VehicleInfo>();
 
-        //public void LoadVehiclesDataBase()
-        //{
-        //    string fileName = "Vehicles.db";
+        public void LoadVehiclesDataBase()
+        {
+            string fileName = "Vehicles.db";
 
-        //    if (!File.Exists(fileName))
-        //    {
-        //        throw new ArgumentException("The specified data file 'Vehicles.db' does not exist.");
-        //    }
+            if (!File.Exists(fileName))
+            {
+                throw new ArgumentException("The specified data file 'Vehicles.db' does not exist.");
+            }
 
-        //    string[] lines = File.ReadAllLines(fileName);
+            string[] lines = File.ReadAllLines(fileName);
 
-        //    foreach (string line in lines)
-        //    {
-        //        if (string.IsNullOrWhiteSpace(line))
-        //        {
-        //            continue;
-        //        }
+            foreach (string line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
 
-        //        string[] rawParts = line.Split(',');
-        //        string[] parts = rawParts.Select(p => p.Trim()).ToArray();
+                string[] rawParts = line.Split(',');
+                string[] parts = rawParts.Select(p => p.Trim()).ToArray();
 
-        //        string vehicleTypeStr = parts[0];
-        //        string license = parts[1];
-        //        string model = parts[2];
-        //        float energyPercentage = float.Parse(parts[3]);
-        //        string tireModel = parts[4];
-        //        float tirePressure = float.Parse(parts[5]);
-        //        string ownerName = parts[6];
-        //        string ownerPhone = parts[7];
+                string vehicleTypeStr = parts[0];
+                string licenseId = parts[1];
+                string modelName = parts[2];
+                string energyPercentage = parts[3];
+                string tireModel = parts[4];
+                string tirePressure = parts[5];
+                string ownerName = parts[6];
+                string ownerPhone = parts[7];
 
-        //        Vehicle vehicle;
+                Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleTypeStr, licenseId, modelName);
+                vehicle.SetEnergyPrecentageLeft(energyPercentage);
+                vehicle.SetTiresData(tireModel, tirePressure);
+                vehicle.initVehicle(parts[8], parts[9]);
+                vehicle.ValidateGarageEntryConditions();
 
-        //        switch (vehicleTypeStr)
-        //        {
-        //            case "FuelMotorcycle":
-        //                eLicenseType fuelMotoLicense = (eLicenseType)Enum.Parse(typeof(eLicenseType), parts[8]);
-        //                int fuelMotoEngine = int.Parse(parts[9]);
-        //                vehicle = new FuelMotorcycle(license, model, tireModel);
-        //                break;
+                VehicleInfo info = new VehicleInfo(ownerName, ownerPhone, vehicle);
 
-        //            case "ElectricMotorcycle":
-        //                eLicenseType electricMotoLicense = (eLicenseType)Enum.Parse(typeof(eLicenseType), parts[8]);
-        //                int electricMotoEngine = int.Parse(parts[9]);
-        //                vehicle = new ElectricMotorcycle(license, model, tireModel);
-        //                break;
-
-        //            case "FuelCar":
-        //                eCarColor fuelCarColor = (eCarColor)Enum.Parse(typeof(eCarColor), parts[8]);
-        //                int fuelDoors = int.Parse(parts[9]);
-        //                vehicle = new FuelCar(license, model, tireModel);
-        //                break;
-
-        //            case "ElectricCar":
-        //                eCarColor electricCarColor = (eCarColor)Enum.Parse(typeof(eCarColor), parts[8]);
-        //                int electricDoors = int.Parse(parts[9]);
-        //                vehicle = new ElectricCar(license, model, tireModel, 4.8f);
-        //                break;
-
-        //            case "Truck":
-        //                bool isHazardous = bool.Parse(parts[8]);
-        //                float cargoVolume = float.Parse(parts[9]);
-        //                vehicle = new Truck(model, license, new Fuel(energyPercentage, 120f, eFuelType.Octan96), tireModel);
-        //                break;
-
-        //            default:
-        //                throw new ArgumentException($"Unsupported vehicle type: {vehicleTypeStr}");
-        //        }
-
-        //        VehicleInfo info = new VehicleInfo(ownerName, ownerPhone, vehicle);
-
-        //        if (!r_GarageVehicles.ContainsKey(license))
-        //        {
-        //            r_GarageVehicles.Add(license, info);
-        //        }
-        //    }
-        //}
+                if (!r_GarageVehicles.ContainsKey(licenseId))
+                {
+                    r_GarageVehicles.Add(licenseId, info);
+                }
+            }
+        }
 
         public void AddVehicleToGarage(string i_LicenseNumber, string i_OwnerName, string i_OwnerPhoneNumber, Vehicle i_NewVehicle)
         {

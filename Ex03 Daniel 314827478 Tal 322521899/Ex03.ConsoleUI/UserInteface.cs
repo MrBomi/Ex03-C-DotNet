@@ -69,6 +69,8 @@ namespace Ex03.ConsoleUI
 
         private void LoadVehiclesFromFile()
         {
+            r_Garage.LoadVehiclesDataBase();
+            Console.WriteLine("Vehicles loaded successfully from the database.");
             throw new NotImplementedException();
         }
 

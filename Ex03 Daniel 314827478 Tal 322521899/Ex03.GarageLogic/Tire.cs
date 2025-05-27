@@ -13,6 +13,25 @@ namespace Ex03.GarageLogic
             m_MaxAirPressure = i_MaxAirPressure;
         }
 
+        public string ManufacturerName
+        {
+            get
+            {
+                return m_ManufacturerName;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Manufacturer name cannot be null or empty.");
+                }
+                else
+                {
+                    m_ManufacturerName = value;
+                }
+            }
+        }
+
         public float MaxAirPressure
         {
             get
