@@ -18,19 +18,22 @@ namespace Ex03.GarageLogic
         {
         }
 
-        public override void initVehicle(string i_LicenseType, string i_EngineVolume)
+        public override void initVehicle(string[] i_VehicleProperties)
         {
-            if (Enum.TryParse(i_LicenseType, out eLicenseType licenseType))
+            string licenseType = i_VehicleProperties[0];
+            string engineVolume = i_VehicleProperties[1];
+
+            if (Enum.TryParse(licenseType, out eLicenseType enumLicenseType))
             {
-                m_LicenseType = licenseType;
+                m_LicenseType = enumLicenseType;
             }
             else
             {
                 throw new ArgumentException("Invalid license type.");
             }
-            if (int.TryParse(i_EngineVolume, out int engineVolume))
+            if (int.TryParse(engineVolume, out int intEngineVolume))
             {
-                r_EngineVolume = engineVolume;
+                r_EngineVolume = intEngineVolume;
             }
             else
             {

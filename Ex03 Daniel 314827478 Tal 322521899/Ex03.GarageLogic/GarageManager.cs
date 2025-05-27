@@ -32,19 +32,33 @@ namespace Ex03.GarageLogic
                 string[] rawParts = line.Split(',');
                 string[] parts = rawParts.Select(p => p.Trim()).ToArray();
 
-                string vehicleTypeStr = parts[0];
-                string licenseId = parts[1];
-                string modelName = parts[2];
-                string energyPercentage = parts[3];
-                string tireModel = parts[4];
-                string tirePressure = parts[5];
-                string ownerName = parts[6];
-                string ownerPhone = parts[7];
+                AddVehicleToGarage(parts);
+            }
+        }
 
+
+        public void AddVehicleToGarage(string[] i_VehicleProperties)
+        {
+            string vehicleTypeStr = i_VehicleProperties[0];
+            string licenseId = i_VehicleProperties[1];
+            string modelName = i_VehicleProperties[2];
+            string energyPercentage = i_VehicleProperties[3];
+            string tireModel = i_VehicleProperties[4];
+            string tirePressure = i_VehicleProperties[5];
+            string ownerName = i_VehicleProperties[6];
+            string ownerPhone = i_VehicleProperties[7];
+
+            if (isSelectedViehicleInGarage(licenseId))
+            {
+                UpdateVehicleStatus(licenseId, eVehicleStatus.InProcess);
+            }
+            else
+            {
                 Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleTypeStr, licenseId, modelName);
+
                 vehicle.SetEnergyPrecentageLeft(energyPercentage);
                 vehicle.SetTiresData(tireModel, tirePressure);
-                vehicle.initVehicle(parts[8], parts[9]);
+                vehicle.initVehicle(new string[] { i_VehicleProperties[8], i_VehicleProperties[9] });
                 vehicle.ValidateGarageEntryConditions();
 
                 VehicleInfo info = new VehicleInfo(ownerName, ownerPhone, vehicle);
@@ -56,39 +70,19 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public void AddVehicleToGarage(string i_LicenseNumber, string i_OwnerName, string i_OwnerPhoneNumber, Vehicle i_NewVehicle)
+        public List<string> ShowVehiclesLicenses(eVehicleStatus? i_FilterStatus = null)
         {
-            if (isSelectedViehicleInGarage(i_LicenseNumber))
-            {
-                throw new ArgumentException($"Vehicle with license number {i_LicenseNumber} already exists in the garage.");
-            }
-            else
-            {
-                VehicleInfo newVehicleInfo = new VehicleInfo(i_OwnerName, i_OwnerPhoneNumber, i_NewVehicle);
-                r_GarageVehicles.Add(i_LicenseNumber, newVehicleInfo);
-            }
-        }
+            List<string> filteredVehiclesInGarage = new List<string>();
 
-        public Dictionary<string, VehicleInfo> ShowVehiclesLicenses(eVehicleStatus? i_FilterStatus = null)
-        {
-            Dictionary<string, VehicleInfo> filteredVehicles = new Dictionary<string, VehicleInfo>();
-
-            if (i_FilterStatus == null)
+            foreach (KeyValuePair<string, VehicleInfo> Vehicle in r_GarageVehicles)
             {
-                filteredVehicles = r_GarageVehicles;
-            }
-            else
-            {
-                foreach (KeyValuePair<string, VehicleInfo> Vehicle in r_GarageVehicles)
+                if (Vehicle.Value.VehicleStatus == i_FilterStatus)
                 {
-                    if (Vehicle.Value.VehicleStatus == i_FilterStatus)
-                    {
-                        filteredVehicles.Add(Vehicle.Key, Vehicle.Value);
-                    }
+                    filteredVehiclesInGarage.Add(Vehicle.Key);
                 }
             }
 
-            return filteredVehicles;
+            return filteredVehiclesInGarage;
         }
 
         public void UpdateVehicleStatus(string i_LicenseNumber, eVehicleStatus i_NewStatus)

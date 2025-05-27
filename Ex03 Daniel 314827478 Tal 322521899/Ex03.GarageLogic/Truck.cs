@@ -9,31 +9,31 @@ namespace Ex03.GarageLogic
     internal class Truck : Vehicle
     {
         private bool r_IsHazardCargo;
-        private float r_CargoVolume; //because cargo volume can be a decimal when im using dataload i need to change the cargovolume without using ctor
+        private float m_CargoVolume; 
         private const int k_NumberOfWheels = 12;
         private const float k_MaxAirPressure = 27;
         private const float k_MaxFuelTank = 135;
 
         public Truck(string i_ModelName, string i_LicenseNumber) : base(i_ModelName, i_LicenseNumber,
-            createTiresList(), new Fuel(0, k_MaxFuelTank, eFuelType.Soler))
-        {
-          //  r_CargoVolume = i_CargoVolume; //we will need to add to r_ishazardcargo to the ctor and change from readonly
-        }
+            createTiresList(), new Fuel(0, k_MaxFuelTank, eFuelType.Soler)) {}
 
-        public override void initVehicle(string i_IsHazardCargo, string i_CargoVolume)
+        public override void initVehicle(string[] i_VehicleProperties)
         {
-            if (bool.TryParse(i_IsHazardCargo, out bool IsHazardCargo))
+            string isHazardCargo = i_VehicleProperties[0];
+            string cargoVolume = i_VehicleProperties[1];
+
+            if (bool.TryParse(isHazardCargo, out bool isHazardCargoBool))
             {
-                r_IsHazardCargo = IsHazardCargo;
+                r_IsHazardCargo = isHazardCargoBool;
             }
             else
             {
                 throw new ArgumentException("Invalid hazard cargo value.");
             }
 
-            if (float.TryParse(i_CargoVolume, out float cargoVolume))
+            if (float.TryParse(cargoVolume, out float floatCargoVolume))
             {
-                r_CargoVolume = cargoVolume;
+                m_CargoVolume = floatCargoVolume;
             }
             else
             {

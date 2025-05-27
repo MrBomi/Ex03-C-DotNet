@@ -9,45 +9,47 @@ namespace Ex03.GarageLogic
     internal class Car : Vehicle
     {
         private eCarColor? m_CarColor;
-        private eNumberOfDoors r_NumberOfDoors; ///changed from readonly for the initvehivle
+        private eNumberOfDoors? m_NumberOfDoors;
         public readonly eNumberOfDoors r_NumberOfDoorsAllowedInGarage = eNumberOfDoors.Five;
-        private const int k_NumberOfWheels = 4;//changed from 5 to 4
+        private const int k_NumberOfWheels = 5;
         private const float k_MaxAirPressure = 32f;
 
         public Car(string i_ModelName, string i_LicenseNumber, EnergySource i_energySource, eNumberOfDoors i_NumberOfDoors) : base(i_ModelName, i_LicenseNumber,
             createTiresList(), i_energySource)
         {
-            r_NumberOfDoors = i_NumberOfDoors;
+            m_NumberOfDoors = i_NumberOfDoors;
         }
 
         public override void ValidateGarageEntryConditions()
         {
-            if (r_NumberOfDoors != r_NumberOfDoorsAllowedInGarage)
+            if (m_NumberOfDoors != r_NumberOfDoorsAllowedInGarage)
             {
                 throw new ArgumentException($"The car must have {r_NumberOfDoorsAllowedInGarage} doors to enter the garage.");
             }
         }
 
-        public override void initVehicle(string i_CarColor, string i_NumberOfDoors)
+        public override void initVehicle(string[] i_VehicleProperties)
         {
-            if (Enum.TryParse(i_CarColor, out eCarColor carColor))
+            string carColor = i_VehicleProperties[0];
+            string numberOfDoors = i_VehicleProperties[1];
+
+            if (Enum.TryParse(carColor, out eCarColor enumCarColor))
             {
-                m_CarColor = carColor;
+                m_CarColor = enumCarColor;
             }
             else
             {
                 throw new ArgumentException("Invalid car color.");
             }
 
-            if (Enum.TryParse(i_NumberOfDoors, out eNumberOfDoors numberOfDoors))
+            if (Enum.TryParse(numberOfDoors, out eNumberOfDoors enumNumberOfDoors))
             {
-                r_NumberOfDoors = numberOfDoors;
+                m_NumberOfDoors = enumNumberOfDoors;
             }
             else
             {
                 throw new ArgumentException("Invalid number of doors.");
             }
-
         }
 
         private static List<Tire> createTiresList()

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    public class Vehicle
+    public abstract class Vehicle
     {
         private readonly string r_ModelName;
         private readonly string r_LicenseNumber;
@@ -24,9 +24,7 @@ namespace Ex03.GarageLogic
             m_EnergySource = i_energySource;
         }
 
-        public virtual void initVehicle(string i_FisrtSpecificPropertie, string i_SecoundSpecificPropertie)
-        {
-        }
+        public abstract void initVehicle(string[] i_VehicleProperties);
 
         public virtual void ValidateGarageEntryConditions()
         {
