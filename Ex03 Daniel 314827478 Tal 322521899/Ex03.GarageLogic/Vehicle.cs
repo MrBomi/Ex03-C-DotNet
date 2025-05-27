@@ -52,7 +52,7 @@ namespace Ex03.GarageLogic
 
             foreach (Tire tire in m_VehicleTires)
             {
-                vehicleDetails += string.Format("{Manufacturer: {0}",
+                vehicleDetails += string.Format("Manufacturer: {0}",
                     tire.ToString());
             }
 
