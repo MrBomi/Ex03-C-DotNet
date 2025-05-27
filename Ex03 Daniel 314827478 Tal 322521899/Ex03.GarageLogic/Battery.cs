@@ -14,10 +14,10 @@ namespace Ex03.GarageLogic
 
         protected override void AddEnergyToVehicle(float i_EnergyToAdd)
         {
-            chargeVehicle(i_EnergyToAdd);
+            ChargeVehicle(i_EnergyToAdd);
         }
 
-        public void chargeVehicle(float i_MinutesToAdd) 
+        public void ChargeVehicle(float i_MinutesToAdd) 
         {
             float upadtedBatteryLeft = this.m_CurrentEnergyLeft + i_MinutesToAdd;
 
@@ -36,6 +36,5 @@ namespace Ex03.GarageLogic
         {
             return string.Format("Battery: {0} hours left , max energy amount is {1} ", m_CurrentEnergyLeft, m_MaxEnergyAmount);
         }
-
     }
 }

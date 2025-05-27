@@ -18,7 +18,7 @@ namespace Ex03.GarageLogic
             r_OwnerName = i_OwnerName;
             r_OwnerPhoneNumber = i_OwnerPhoneNumber;
             m_VehicleStatus = eVehicleStatus.InProcess;
-            r_Vehicle = i_Vehicle; 
+            r_Vehicle = i_Vehicle;
         }
 
         public Vehicle Vehicle
@@ -30,8 +30,8 @@ namespace Ex03.GarageLogic
         }
         public string OwnerName
         {
-            get 
-            { 
+            get
+            {
                 return r_OwnerName;
             }
         }
@@ -59,7 +59,7 @@ namespace Ex03.GarageLogic
         {
             string vehicleInfoDetails = string.Format(
                 "Owner Name: {0}\nOwner Phone Number: {1}\nVehicle Status: {2}\nVehicle Model: {3}\n"
-                ,r_OwnerName, r_OwnerPhoneNumber, m_VehicleStatus.ToString(), r_Vehicle.ToString());
+                , r_OwnerName, r_OwnerPhoneNumber, m_VehicleStatus.ToString(), r_Vehicle.ToString());
 
             return vehicleInfoDetails;
         }
