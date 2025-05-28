@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
@@ -17,7 +14,7 @@ namespace Ex03.GarageLogic
         public Truck(string i_LicenseNumber , string i_ModelName) : base(i_ModelName, i_LicenseNumber,
             createTiresList(), new Fuel(0, k_MaxFuelTank, eFuelType.Soler)) {}
 
-        public override void initVehicle(string[] i_VehicleProperties)
+        public override void InitVehicle(string[] i_VehicleProperties)
         {
             string isHazardCargo = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex];
             string cargoVolume = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex + 1];
@@ -33,7 +30,14 @@ namespace Ex03.GarageLogic
 
             if (float.TryParse(cargoVolume, out float floatCargoVolume))
             {
-                m_CargoVolume = floatCargoVolume;
+                if (floatCargoVolume >= 0)
+                {
+                    m_CargoVolume = floatCargoVolume;
+                }
+                else
+                {
+                    throw new ArgumentException("Cargo volume should be positive.");
+                }
             }
             else
             {
@@ -43,7 +47,9 @@ namespace Ex03.GarageLogic
 
         public override string SpecifVehiclePropertiesInfo()
         {
-            string specificVehicleProperties = string.Format(
+            string specificVehicleProperties;
+
+            specificVehicleProperties = string.Format(
                 "Is Hazard Cargo: {0}\n" +
                 "Cargo Volume: {1} cubic meters\n",
                 r_IsHazardCargo ,

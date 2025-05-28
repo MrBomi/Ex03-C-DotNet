@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
@@ -23,7 +19,7 @@ namespace Ex03.GarageLogic
             }
         }
 
-        protected override void AddEnergyToVehicle(float i_EnergyToAdd)
+        public override void AddEnergyToVehicle(float i_EnergyToAdd)
         {
             throw new ArgumentException("Must specify fuel type for that request");
         }
@@ -35,17 +31,16 @@ namespace Ex03.GarageLogic
 
         private void refuelCar(float i_FuelAmount, eFuelType? i_FuelType = null)
         {
-
-            float updatedFuelLevel = this.m_CurrentEnergyLeft + i_FuelAmount;
+            float updatedFuelLevel = this.CurrentEnergyLeft + i_FuelAmount;
 
             if(!i_FuelType.HasValue)
             {
                 throw new NullReferenceException("Null reference for i_FuelType input");
             }
-            else if(updatedFuelLevel > this.m_MaxEnergyAmount)
+            else if(updatedFuelLevel > this.MaxEnergyAmount)
             {
-                throw new ValueRangeException(this.m_MaxEnergyAmount, 0,
-                    string.Format($"The fuel tank can contain up to {this.m_MaxEnergyAmount} liter"));
+                throw new ValueRangeException(this.MaxEnergyAmount, 0,
+                    string.Format($"The fuel tank can contain up to {this.MaxEnergyAmount} liter"));
             }
             else if(i_FuelType != m_FuelType)
             {
@@ -55,13 +50,13 @@ namespace Ex03.GarageLogic
             }
             else
             {
-                this.m_CurrentEnergyLeft = updatedFuelLevel;
+                this.CurrentEnergyLeft = updatedFuelLevel;
             }
         }
 
         public override string ToString()
         {
-            return string.Format("Fuel: {0} liters left , max enregy amount is {1} liters and the fuel type is {2}", m_CurrentEnergyLeft, m_MaxEnergyAmount, m_FuelType.ToString());
+            return string.Format("Fuel: {0} liters left , max enregy amount is {1} liters and the fuel type is {2}", this.CurrentEnergyLeft, this.MaxEnergyAmount, m_FuelType.ToString());
         }
     }
 }

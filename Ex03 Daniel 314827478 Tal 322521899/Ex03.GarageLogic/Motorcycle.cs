@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
@@ -15,10 +12,9 @@ namespace Ex03.GarageLogic
 
         public Motorcycle(string i_ModelName, string i_LicenseNumber, EnergySource i_energySource) : base(i_ModelName, i_LicenseNumber,
             createTiresList(), i_energySource)
-        {
-        }
+        { }
 
-        public override void initVehicle(string[] i_VehicleProperties)
+        public override void InitVehicle(string[] i_VehicleProperties)
         {
             string licenseType = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex];
             string engineVolume = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex + 1];
@@ -31,9 +27,17 @@ namespace Ex03.GarageLogic
             {
                 throw new ArgumentException("Invalid license type.");
             }
+
             if (int.TryParse(engineVolume, out int intEngineVolume))
             {
-                r_EngineVolume = intEngineVolume;
+                if (intEngineVolume >= 0)
+                {
+                    r_EngineVolume = intEngineVolume;
+                }
+                else
+                {
+                    throw new ArgumentException("Engine volume should be positive number");
+                }
             }
             else
             {
@@ -47,13 +51,21 @@ namespace Ex03.GarageLogic
 
             for (int i = 0; i < k_NumberOfWheels ; i++)
             {
-                //  tiresList[i] = new Tire(k_MaxAirPressure);
                 tiresList.Add(new Tire(k_MaxAirPressure));
-
             }
 
             return tiresList;
         }
 
+        public override string SpecifVehiclePropertiesInfo()
+        {
+            string specificCarProperties = string.Format(
+                "License type: {0}\n" +
+                "Engine volume: {1} liters\n",
+                m_LicenseType,
+                r_EngineVolume);
+
+            return specificCarProperties;
+        }
     }
 }

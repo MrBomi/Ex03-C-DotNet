@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
     internal class ElectricCar : Car
     {
@@ -13,11 +7,11 @@ namespace Ex03.GarageLogic
         public ElectricCar(string i_LicenseID, string i_ModelName) : 
             base(i_ModelName, i_LicenseID, new Battery(0, k_MaxBatteryTimeInHours), eNumberOfDoors.Five) { }
 
-        public virtual string SpecifVehiclePropertiesInfo()
+        public override string SpecifVehiclePropertiesInfo()
         {
             string specificVehicleProperties = string.Format(
                 "Max Battery Time: {0} hours\n",
-                ((Battery)EnergySource).m_MaxEnergyAmount);
+                ((Battery)EnergySource).MaxEnergyAmount);
 
             return specificVehicleProperties;
         }

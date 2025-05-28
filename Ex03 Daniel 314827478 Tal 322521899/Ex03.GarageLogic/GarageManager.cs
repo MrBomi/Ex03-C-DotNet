@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
     public class GarageManager
     {
         private readonly Dictionary<string, VehicleInfo> r_GarageVehicles = new Dictionary<string, VehicleInfo>();
-        private const int k_NumberOfRequiredVehicleProperties = 8; // Adjusted to match the expected number of properties
+        private const int k_NumberOfRequiredVehicleProperties = 8;
 
-        public void LoadVehiclesDataBase()
+        public void LoadVehiclesDataBase(List<string> io_invalidLinesInFile)
         {
             string fileName = "Vehicles.db";
 
@@ -33,13 +30,18 @@ namespace Ex03.GarageLogic
               
                 string[] rawParts = line.Split(',');
                 string[] parts = rawParts.Select(p => p.Trim()).ToArray();
+
                 try
                 {
                     AddVehicleToGarage(parts);
                 }
                 catch (ArgumentException ex)
                 {
-                    Console.WriteLine($"Error adding vehicle with license {parts[1]}: {ex.Message}");
+                    io_invalidLinesInFile.Add(line);
+                }
+                catch (NullReferenceException ex)
+                {
+                    io_invalidLinesInFile.Add(line);
                 }
             }
         }
@@ -61,7 +63,7 @@ namespace Ex03.GarageLogic
                 string ownerName = i_VehicleProperties[6];
                 string ownerPhone = i_VehicleProperties[7];
 
-                if (isSelectedViehicleInGarage(licenseId))
+                if (IsSelectedViehicleInGarage(licenseId))
                 {
                     UpdateVehicleStatus(licenseId, eVehicleStatus.InProcess);
                 }
@@ -69,11 +71,14 @@ namespace Ex03.GarageLogic
                 {
                     Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleTypeStr, licenseId, modelName);
 
+                    if(vehicle == null)
+                    {
+                        throw new ArgumentException("Invalid vehicle properties provided.");
+                    }
+
                     vehicle.SetEnergyPrecentageLeft(energyPercentage);
                     vehicle.SetTiresData(tireModel, tirePressure);
-                    vehicle.initVehicle(i_VehicleProperties);
-                    vehicle.ValidateGarageEntryConditions();
-
+                    vehicle.InitVehicle(i_VehicleProperties);
                     VehicleInfo info = new VehicleInfo(ownerName, ownerPhone, vehicle);
 
                     if (!r_GarageVehicles.ContainsKey(licenseId))
@@ -83,6 +88,7 @@ namespace Ex03.GarageLogic
                 }
             }
         }
+
 
         public List<string> ShowVehiclesLicenses(eVehicleStatus? i_FilterStatus = null)
         {
@@ -101,7 +107,7 @@ namespace Ex03.GarageLogic
 
         public void UpdateVehicleStatus(string i_LicenseNumber, eVehicleStatus i_NewStatus)
         {
-            if (isSelectedViehicleInGarage(i_LicenseNumber))
+            if (IsSelectedViehicleInGarage(i_LicenseNumber))
             {
                 r_GarageVehicles[i_LicenseNumber].VehicleStatus = i_NewStatus;
             }
@@ -111,10 +117,9 @@ namespace Ex03.GarageLogic
             }
         }
 
-
         public void InflateTireToMax(string i_LicenseNumber)
         {
-            if (isSelectedViehicleInGarage(i_LicenseNumber))
+            if (IsSelectedViehicleInGarage(i_LicenseNumber))
             {
                 foreach (Tire tire in r_GarageVehicles[i_LicenseNumber].Vehicle.Tires)
                 {
@@ -126,73 +131,62 @@ namespace Ex03.GarageLogic
                 throw new ArgumentException($"Vehicle with license number {i_LicenseNumber} was not found in the garage.");
             }
         }
+
         public void RefuelVehicle(string i_LicenseNumber, eFuelType i_FuelType, float i_AmountToFill)
         {
-            if (!isSelectedViehicleInGarage(i_LicenseNumber))
+            if (!IsSelectedViehicleInGarage(i_LicenseNumber))
             {
                 throw new ArgumentException($"Cannot refuel: vehicle with license number {i_LicenseNumber} does not exist in the garage.");
             }
 
             EnergySource selectedVehicleEnergySource = r_GarageVehicles[i_LicenseNumber].Vehicle.EnergySource;
 
-            if (selectedVehicleEnergySource is Fuel)
+            if(!(selectedVehicleEnergySource is Fuel))
             {
-                Fuel vehicleFuelTank = selectedVehicleEnergySource as Fuel;
-
-                if (vehicleFuelTank.FuelType == i_FuelType)
-                {
-                    vehicleFuelTank.AddEnergyToVehicle(i_AmountToFill);
-                }
-                else
-                {
-                    throw new ArgumentException($"Fuel type mismatch: vehicle requires {vehicleFuelTank.FuelType}, but received {i_FuelType}.");
-                }
+                throw new ArgumentException("That vehicle is not fuel based");
             }
-            else
-            {
-                throw new ArgumentException("Refueling failed: vehicle is not fuel-based.");
+            else 
+            { 
+                (selectedVehicleEnergySource as Fuel).AddEnergyToVehicle(i_AmountToFill, i_FuelType); 
             }
         }
 
         public void RechargeVehicle(string i_LicenseNumber, float i_MinutesToCharge)
         {
-            if (!isSelectedViehicleInGarage(i_LicenseNumber))
+            if (!IsSelectedViehicleInGarage(i_LicenseNumber))
             {
                 throw new ArgumentException($"Cannot refuel: vehicle with license number {i_LicenseNumber} does not exist in the garage.");
             }
 
             EnergySource selectedVehicleEnergySource = r_GarageVehicles[i_LicenseNumber].Vehicle.EnergySource;
 
-            if (selectedVehicleEnergySource is Battery)
-            {
-                Battery vehicleBattery = selectedVehicleEnergySource as Battery;
-                vehicleBattery.ChargeVehicle(i_MinutesToCharge);
-            }
-            else
+            if (!(selectedVehicleEnergySource is Battery))
             {
                 throw new ArgumentException("Refueling failed: vehicle is not Electric-based.");
             }
+            else
+            {
+                selectedVehicleEnergySource.AddEnergyToVehicle(i_MinutesToCharge);
+            }
         }
+
         public string VehicleDetails(string i_LicenseNumber)
         {
             String vehicleDetails;
-            String specificVehicleProperties;
 
-            if (!isSelectedViehicleInGarage(i_LicenseNumber))
+            if (!IsSelectedViehicleInGarage(i_LicenseNumber))
             {
-                throw new ArgumentException($"Cannot refuel: vehicle with license number {i_LicenseNumber} does not exist in the garage.");
+                throw new ArgumentException($"License '{i_LicenseNumber}' does not exist in the garage.");
             }
             else
             {
-                specificVehicleProperties = r_GarageVehicles[i_LicenseNumber].Vehicle.SpecifVehiclePropertiesInfo();
-                vehicleDetails =  r_GarageVehicles[i_LicenseNumber].ToString() + specificVehicleProperties;
+                vehicleDetails = r_GarageVehicles[i_LicenseNumber].ToString();
             }
 
             return vehicleDetails;
         }
 
-
-        public bool isSelectedViehicleInGarage(string i_LicenseNumber)
+        public bool IsSelectedViehicleInGarage(string i_LicenseNumber)
         {
             return r_GarageVehicles.ContainsKey(i_LicenseNumber);
         }

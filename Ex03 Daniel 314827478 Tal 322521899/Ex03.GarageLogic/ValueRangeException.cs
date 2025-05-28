@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    internal class ValueRangeException : Exception
+    public class ValueRangeException : Exception
     {
         private readonly float r_MaxValue;
         private readonly float r_MinValue;

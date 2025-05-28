@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ex03.GarageLogic;
 
 namespace Ex03.ConsoleUI
@@ -15,6 +12,7 @@ namespace Ex03.ConsoleUI
         {
             r_Garage = new GarageManager();
         }
+
         public void RunGarage()
         {
             bool isGarageActive = true;
@@ -23,7 +21,6 @@ namespace Ex03.ConsoleUI
             while (isGarageActive)
             {
                 selctedOption = printMenu();
-
                 if(selctedOption == eMenuOptions.ExitGarage)
                 {
                     Console.WriteLine("Exiting garage...");
@@ -31,39 +28,58 @@ namespace Ex03.ConsoleUI
                 }
                 else
                 {
-                    performUserAction(selctedOption);
+                    try
+                    {
+                        PerformUserAction(selctedOption);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    catch (ValueRangeException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    finally
+                    {
+                        Console.WriteLine();
+                    }
                 }
             }
         }
 
-        public void performUserAction(eMenuOptions i_selctedOption)
+        public void PerformUserAction(eMenuOptions i_selctedOption)
         {
             Console.Clear();
             switch (i_selctedOption)
             {
                 case eMenuOptions.LoadDataBase:
-                    LoadVehiclesFromFile();
+                    loadVehiclesFromFile();
                     break;
                 case eMenuOptions.AddNewVehicle:
-                    InsertNewVehicle();
+                    insertNewVehicle();
                     break;
                 case eMenuOptions.ShowLicensesList:
-                    ShowAllLicenseNumbers();
+                    showAllLicenseNumbers();
                     break;
                 case eMenuOptions.ChangeVehicleStatus:
-                    ChangeVehicleStatus();
+                    changeVehicleStatus();
                     break;
                 case eMenuOptions.InflateWheelsToMax:
-                    InflateWheelsToMaximum();
+                    inflateWheelsToMaximum();
                     break;
                 case eMenuOptions.RefuelVehicle:
-                    RefuelVehicle();
+                    refuelVehicle();
                     break;
                 case eMenuOptions.RechargeVehicle:
-                    RechargeVehicle();
+                    rechargeVehicle();
                     break;
                 case eMenuOptions.ShowVehicleData:
-                    ShowFullVehicleDetails();
+                    showFullVehicleDetails();
                     break;
                 default:
                     Console.WriteLine("Unknown option.");
@@ -71,7 +87,7 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void RechargeVehicle()
+        private void rechargeVehicle()
         {
             string licenseNumber;
             string amountOfTimeToRecharge;
@@ -79,10 +95,9 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine("Please enter the license number of the vehicle you want to recharge:");
             licenseNumber = Console.ReadLine();
-            if (!r_Garage.isSelectedViehicleInGarage(licenseNumber))
+            if (!r_Garage.IsSelectedViehicleInGarage(licenseNumber))
             {
                 Console.WriteLine("Vehicle not found in the garage. Going back to Menu.");
-                printMenu();
             }
             else
             {
@@ -92,29 +107,41 @@ namespace Ex03.ConsoleUI
                 if (!isValidFloat)
                 {
                     Console.WriteLine("Invalid input for recharge time. Going back to Menu.");
-                    printMenu();
                 }
                 else
                 {
-                    Console.WriteLine("Recharging vehicle...");
                     r_Garage.RechargeVehicle(licenseNumber, rechargeTime);
+                    Console.WriteLine("Vehicle recharged"); 
                 }
             }
         }
 
-        private void LoadVehiclesFromFile()
+        private void loadVehiclesFromFile()
         {
-            r_Garage.LoadVehiclesDataBase();
+            List<string> invalidLinesInFile = new List<string>();
+
+            r_Garage.LoadVehiclesDataBase(invalidLinesInFile);
             Console.WriteLine("Vehicles loaded successfully from the database.");
+            if(invalidLinesInFile.Count > 0)
+            {
+                Console.WriteLine("The following lines in the file wasnt loaded correctly :");
+                foreach (string line in invalidLinesInFile)
+                {
+                    Console.WriteLine(line);
+                }
+
+                Console.WriteLine();
+            }
         }
 
-        private void ShowFullVehicleDetails()
+        private void showFullVehicleDetails()
         {
+            Console.Clear();
             Console.WriteLine("Please enter the license number of the vehicle you want to view details for:");
             Console.WriteLine(r_Garage.VehicleDetails(Console.ReadLine()));
         }
  
-        private void RefuelVehicle()
+        private void refuelVehicle()
         {
             string licenseNumber;
             string fuelType;
@@ -124,11 +151,9 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine("Please enter the license number of the vehicle you want to refuel:");
             licenseNumber = Console.ReadLine();
-
-            if (!r_Garage.isSelectedViehicleInGarage(licenseNumber))
+            if (!r_Garage.IsSelectedViehicleInGarage(licenseNumber))
             {
                 Console.WriteLine("Vehicle not found in the garage. Going back to Menu.");
-                printMenu();
             }
             else
             {
@@ -138,38 +163,34 @@ namespace Ex03.ConsoleUI
                 if (!isValidEnum)
                 {
                     Console.WriteLine("Invalid fuel type. Going back to Menu.");
-                    printMenu();
                 }
                 else
                 {
                     Console.WriteLine("Please enter the amount of fuel to fill:");
                     AmoutTofill = Console.ReadLine();
                     isValidAmoutTofill = float.TryParse(AmoutTofill, out float amountToFillFloat) || amountToFillFloat < 0;
-                    if (isValidAmoutTofill)
+                    if (!isValidAmoutTofill)
                     {
                         Console.WriteLine("Invalid amount to fill. Going back to Menu.");
-                        printMenu();
                     }
                     else
                     {
-                        Console.WriteLine(" Refueling vehicle...");
                         r_Garage.RefuelVehicle(licenseNumber, fuelTypeEnum, amountToFillFloat);
+                        Console.WriteLine("Vehicle refuled");
                     }
                 }
             }
         }
 
-        private void InflateWheelsToMaximum()
+        private void inflateWheelsToMaximum()
         {
             string licenseNumber;
 
-            Console.WriteLine("Please enter the license number of the vehicle you want to refuel:");
+            Console.WriteLine("Please enter the license number of the vehicle you want to inflate his tires");
             licenseNumber = Console.ReadLine();
-
-            if (!r_Garage.isSelectedViehicleInGarage(licenseNumber))
+            if (!r_Garage.IsSelectedViehicleInGarage(licenseNumber))
             {
                 Console.WriteLine("Vehicle not found in the garage. Going back to Menu.");
-                printMenu();
             }
             else
             {
@@ -178,19 +199,17 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void ChangeVehicleStatus()
+        private void changeVehicleStatus()
         {
             string licenseNumber;
             string newStatus;
             bool isValidEnum;
 
-            Console.WriteLine("Please enter the license number of the vehicle you want to refuel:");
+            Console.WriteLine("Please enter the license number of the vehicle you want to change status");
             licenseNumber = Console.ReadLine();
-
-            if (!r_Garage.isSelectedViehicleInGarage(licenseNumber))
+            if (!r_Garage.IsSelectedViehicleInGarage(licenseNumber))
             {
                 Console.WriteLine("Vehicle not found in the garage. Going back to Menu.");
-                printMenu();
             }
             else
             {
@@ -202,7 +221,6 @@ namespace Ex03.ConsoleUI
                 if (!isValidEnum)
                 {
                     Console.WriteLine("Invalid status. Going back to Menu.");
-                    printMenu();
                 }
                 else
                 {
@@ -212,13 +230,13 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void ShowAllLicenseNumbers()
+        private void showAllLicenseNumbers()
         {
             eVehicleStatus vehicleStatusToFilter;
             bool isValidEnum = false;
             List<string> filteredLicenseNumbers = null;
 
-            Console.WriteLine("Please enter the desired status to filter - type 0 for InProcess, 1 for Fixed or 2 for Paid");
+            Console.WriteLine("Please enter the desired status to filter: InProcess, Fixed or Paid");
             isValidEnum = Enum.TryParse(Console.ReadLine(), out vehicleStatusToFilter)
                    && Enum.IsDefined(typeof(eVehicleStatus), vehicleStatusToFilter);
 
@@ -237,9 +255,28 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void InsertNewVehicle() // to split
+        private void insertNewVehicle()
         {
             string licenseId;
+            string[] vehicleParams = null;
+
+            Console.WriteLine("Please enter the license id of the car you want to insert to garage");
+            licenseId = Console.ReadLine();
+            if (r_Garage.IsSelectedViehicleInGarage(licenseId))
+            {
+                Console.WriteLine("Weve found your car in our system, we will fix it for you");
+                r_Garage.UpdateVehicleStatus(licenseId, eVehicleStatus.InProcess);
+            }
+            else
+            {
+                vehicleParams = getVehicleInfoFromUser(licenseId);
+                r_Garage.AddVehicleToGarage(vehicleParams);
+                Console.WriteLine("Vehicle added successfully to the garage.");
+            }
+        }
+
+        private string[] getVehicleInfoFromUser(string i_LicenseId)
+        {
             string vehicleType;
             string energyPrecentage;
             string modelName;
@@ -250,110 +287,52 @@ namespace Ex03.ConsoleUI
             string specialParam1 = null;
             string specialParam2 = null;
 
-            Console.WriteLine("Please enter the license id of the car you want to insert to garage");
-            licenseId = Console.ReadLine();
-            if(r_Garage.isSelectedViehicleInGarage(licenseId))
+            Console.WriteLine("Please enter the vehicle type");
+            vehicleType = Console.ReadLine();
+            Console.WriteLine("Please enter the model name of the vehicle");
+            modelName = Console.ReadLine();
+            Console.WriteLine("Please enter the vehicle energy precentage(0 - 100)");
+            energyPrecentage = Console.ReadLine();
+            Console.WriteLine("Please enter the tire model");
+            tireModel = Console.ReadLine();
+            Console.WriteLine("Please enter the current air pressure of your wheels");
+            tirePressure = Console.ReadLine();
+            Console.WriteLine("Please enter owner name");
+            ownerName = Console.ReadLine();
+            Console.WriteLine("Please enter owner phone");
+            ownerPhone = Console.ReadLine();
+
+            switch (vehicleType)
             {
-                Console.WriteLine("Weve found your car in our system, we will fix it for you");
-                r_Garage.UpdateVehicleStatus(licenseId, eVehicleStatus.InProcess);
+                case "FuelCar":
+                case "ElectricCar":
+                    Console.WriteLine("Please the color of the car");
+                    specialParam1 = Console.ReadLine();
+                    Console.WriteLine("Please enter how many doors that car has");
+                    specialParam2 = Console.ReadLine();
+                    break;
+                case "FuelMotorcycle":
+                case "ElectricMotorcycle":
+                    Console.WriteLine("Please the license type of the motorcycle");
+                    specialParam1 = Console.ReadLine();
+                    Console.WriteLine("Please enter the engine volume");
+                    specialParam2 = Console.ReadLine();
+                    break;
+                case "Truck":
+                    Console.WriteLine("Please enter if carring hazardious stuff (true / false)");
+                    specialParam1 = Console.ReadLine();
+                    Console.WriteLine("Please enter the cargo volume");
+                    specialParam2 = Console.ReadLine();
+                    break;
             }
-            else
-            {
-                Console.WriteLine("Please enter the vehicle type");
-                vehicleType = Console.ReadLine();
-                Console.WriteLine("Please enter the model name of the vehicle");
-                modelName = Console.ReadLine();
-                Console.WriteLine("Please enter the vehicle energy precentage");
-                energyPrecentage = Console.ReadLine();
-                Console.WriteLine("Please enter the tire model");
-                tireModel = Console.ReadLine();
-                Console.WriteLine("Please enter the current air pressure of your wheels");
-                tirePressure = Console.ReadLine();
-                Console.WriteLine("Please enter owner name");
-                ownerName = Console.ReadLine();
-                Console.WriteLine("Please enter owner phone");
-                ownerPhone = Console.ReadLine();
 
-                switch (vehicleType)
-                {
-                    case "FuelCar":
-                    case "ElectricCar":
-                        Console.WriteLine("Please the color of the car");
-                        specialParam1 = Console.ReadLine();
-                        Console.WriteLine("Please enter how many doors that car has");
-                        specialParam2 = Console.ReadLine();
-                        break;
-                    case "FuelMotorcycle":                        
-                    case "ElectricMotorcycle":
-                        Console.WriteLine("Please the license type of the motorcycle");
-                        specialParam1 = Console.ReadLine();
-                        Console.WriteLine("Please enter the engine volume");
-                        specialParam2 = Console.ReadLine();
-                        break;
-                    case "Truck":
-                        Console.WriteLine("Please enter if carring hazardious stuff (true / false)");
-                        specialParam1 = Console.ReadLine();
-                        Console.WriteLine("Please enter the cargo volume");
-                        specialParam2 = Console.ReadLine();
-                        break;
-                    default:
-                        Console.WriteLine("We are not support that vehicle type");
-                        break;
-                }
-
-                string[] vehicleParams = {vehicleType, licenseId, modelName, energyPrecentage, tireModel,
+            string[] vehicleParams = {vehicleType, i_LicenseId, modelName, energyPrecentage, tireModel,
                     tirePressure, ownerName, ownerPhone, specialParam1, specialParam2};
-                r_Garage.AddVehicleToGarage(vehicleParams);
-                Console.WriteLine("Vehicle added successfully to the garage.");
-            }
+
+            return vehicleParams;
         }
 
-        //public eMenuOptions printMenu()
-        //{
-        //    bool isInputVaid = false;
-        //    ushort inputToTest;
-        //    eMenuOptions optionSelected = eMenuOptions.ExitGarage;
-
-        //    Console.WriteLine("Please choose an option:");
-        //    Console.WriteLine("1. Load vehicles from database");
-        //    Console.WriteLine("2. Insert a new vehicle to the garage");
-        //    Console.WriteLine("3. Show all license numbers");
-        //    Console.WriteLine("4. Change vehicle status");
-        //    Console.WriteLine("5. Inflate wheels to max");
-        //    Console.WriteLine("6. Refuel a fuel-based vehicle");
-        //    Console.WriteLine("7. Recharge an electric vehicle");
-        //    Console.WriteLine("8. Show full vehicle details");
-        //    Console.WriteLine("0. Exit");
-        //    Console.WriteLine();
-        //    Console.Write("Enter your choice (0-8): ");
-
-        //    while (!isInputVaid)
-        //    {
-        //        try 
-        //        {
-        //            inputToTest = ushort.Parse(Console.ReadLine());
-        //        }
-        //        catch (FormatException)
-        //        {
-        //            Console.WriteLine("Invalid Input. Please enter number between 0-8");
-        //            continue;
-        //        }
-
-        //        if(Enum.IsDefined(typeof(eMenuOptions), inputToTest) )
-        //        {
-        //            optionSelected = (eMenuOptions)inputToTest;
-        //            isInputVaid = true;
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("That option is out of range, Please enter number between 0-8");
-        //        }
-        //    }
-
-        //    return optionSelected;
-        //}
-
-        public eMenuOptions printMenu()
+        private eMenuOptions printMenu()
         {
             bool isInputVaid = false;
             string inputToTest;
@@ -374,15 +353,8 @@ namespace Ex03.ConsoleUI
 
             while (!isInputVaid)
             {
-                try
-                {
-                    inputToTest = Console.ReadLine();
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Invalid Input. Please enter number between 0-8");
-                    continue;
-                }
+                inputToTest = Console.ReadLine();
+
                 if (Enum.TryParse(inputToTest, out eMenuOptions enumToCheck) && Enum.IsDefined(typeof(eMenuOptions), enumToCheck))
                 {
                     optionSelected = enumToCheck;

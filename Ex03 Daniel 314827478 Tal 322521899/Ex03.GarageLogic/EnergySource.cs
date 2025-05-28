@@ -1,15 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
     public abstract class EnergySource
     {
-        public float m_CurrentEnergyLeft { get; set; }
-        public float m_MaxEnergyAmount { get;}
+        private float m_CurrentEnergyLeft;
+        private float m_MaxEnergyAmount;
+
+        public float CurrentEnergyLeft
+        {
+            get 
+            { 
+                return m_CurrentEnergyLeft; 
+            }
+            set 
+            {
+                m_CurrentEnergyLeft = value;
+            }
+        }
+
+        public float MaxEnergyAmount
+        {
+            get
+            {
+                return m_MaxEnergyAmount;
+            }
+            set
+            {
+                m_MaxEnergyAmount = value;
+            }
+        }
 
         public EnergySource(float i_CurrentEnergyLeft, float i_MaxEnergyAmount)
         {
@@ -32,7 +52,7 @@ namespace Ex03.GarageLogic
             }
         }
 
-        protected abstract void AddEnergyToVehicle(float i_EnergyToAdd);
+        public abstract void AddEnergyToVehicle(float i_EnergyToAdd);
 
         public abstract override string ToString();
     }
