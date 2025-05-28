@@ -2,9 +2,9 @@
 {
     public enum eNumberOfDoors
     {
-        Two,
-        Three,
-        Four,
-        Five
+        Two = 2 ,
+        Three = 3,
+        Four = 4,
+        Five = 5
     }
 }

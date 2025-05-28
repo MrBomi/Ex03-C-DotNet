@@ -14,13 +14,13 @@ namespace Ex03.GarageLogic
         private const float k_MaxAirPressure = 27;
         private const float k_MaxFuelTank = 135;
 
-        public Truck(string i_ModelName, string i_LicenseNumber) : base(i_ModelName, i_LicenseNumber,
+        public Truck(string i_LicenseNumber , string i_ModelName) : base(i_ModelName, i_LicenseNumber,
             createTiresList(), new Fuel(0, k_MaxFuelTank, eFuelType.Soler)) {}
 
         public override void initVehicle(string[] i_VehicleProperties)
         {
-            string isHazardCargo = i_VehicleProperties[0];
-            string cargoVolume = i_VehicleProperties[1];
+            string isHazardCargo = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex];
+            string cargoVolume = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex + 1];
 
             if (bool.TryParse(isHazardCargo, out bool isHazardCargoBool))
             {
@@ -41,13 +41,24 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public override string SpecifVehiclePropertiesInfo()
+        {
+            string specificVehicleProperties = string.Format(
+                "Is Hazard Cargo: {0}\n" +
+                "Cargo Volume: {1} cubic meters\n",
+                r_IsHazardCargo ,
+                m_CargoVolume);
+
+            return specificVehicleProperties;
+        }
+
         private static List<Tire> createTiresList()
         {
             List<Tire> tiresList = new List<Tire>();
 
             for (int i = 0; i < k_NumberOfWheels; i++)
             {
-                tiresList[i] = new Tire(k_MaxAirPressure);
+                tiresList.Add(new Tire(k_MaxAirPressure));
             }
 
             return tiresList;

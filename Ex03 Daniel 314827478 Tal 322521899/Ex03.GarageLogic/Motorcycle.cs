@@ -20,8 +20,8 @@ namespace Ex03.GarageLogic
 
         public override void initVehicle(string[] i_VehicleProperties)
         {
-            string licenseType = i_VehicleProperties[0];
-            string engineVolume = i_VehicleProperties[1];
+            string licenseType = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex];
+            string engineVolume = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex + 1];
 
             if (Enum.TryParse(licenseType, out eLicenseType enumLicenseType))
             {
@@ -47,10 +47,13 @@ namespace Ex03.GarageLogic
 
             for (int i = 0; i < k_NumberOfWheels ; i++)
             {
-                tiresList[i] = new Tire(k_MaxAirPressure);
+                //  tiresList[i] = new Tire(k_MaxAirPressure);
+                tiresList.Add(new Tire(k_MaxAirPressure));
+
             }
 
             return tiresList;
         }
+
     }
 }

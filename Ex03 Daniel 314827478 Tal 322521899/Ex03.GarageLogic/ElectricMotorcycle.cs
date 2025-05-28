@@ -13,5 +13,14 @@ namespace Ex03.GarageLogic
         public ElectricMotorcycle(string i_LicenseID, string i_ModelName) :
             base(i_ModelName, i_LicenseID, new Battery(0, k_MaxBatteryTimeInHours))
         { }
+        public virtual string SpecifVehiclePropertiesInfo()
+        {
+            string specificVehicleProperties = string.Format(
+                "Max Battery Time: {0} hours\n",
+                ((Battery)EnergySource).m_MaxEnergyAmount);
+
+            return specificVehicleProperties;
+        }
     }
+
 }

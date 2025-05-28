@@ -30,10 +30,10 @@ namespace Ex03.GarageLogic
 
         public override void initVehicle(string[] i_VehicleProperties)
         {
-            string carColor = i_VehicleProperties[0];
-            string numberOfDoors = i_VehicleProperties[1];
+            string carColor = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex];
+            string numberOfDoors = i_VehicleProperties[k_SpecificVehiclePropertiesStartIndex + 1];
 
-            if (Enum.TryParse(carColor, out eCarColor enumCarColor))
+            if (Enum.TryParse(carColor, out eCarColor enumCarColor) && Enum.IsDefined(typeof(eCarColor), enumCarColor) )
             {
                 m_CarColor = enumCarColor;
             }
@@ -42,7 +42,7 @@ namespace Ex03.GarageLogic
                 throw new ArgumentException("Invalid car color.");
             }
 
-            if (Enum.TryParse(numberOfDoors, out eNumberOfDoors enumNumberOfDoors))
+            if (Enum.TryParse(numberOfDoors, out eNumberOfDoors enumNumberOfDoors) && Enum.IsDefined(typeof(eNumberOfDoors), enumNumberOfDoors))
             {
                 m_NumberOfDoors = enumNumberOfDoors;
             }
@@ -58,7 +58,8 @@ namespace Ex03.GarageLogic
 
             for(int i = 0 ;  i < k_NumberOfWheels; i++)
             {
-                tiresList[i] = new Tire(k_MaxAirPressure);
+                tiresList.Add(new Tire(k_MaxAirPressure));
+
             }
 
             return tiresList;

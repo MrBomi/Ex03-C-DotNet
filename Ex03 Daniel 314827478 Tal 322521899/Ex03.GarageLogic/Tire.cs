@@ -77,8 +77,8 @@ namespace Ex03.GarageLogic
 
         public override string ToString()
         {
-            string tireDetails = string.Format("{Manufacturer: {0}, Current Air Pressure: {1}\n}",
-                    m_ManufacturerName, m_CurrentAirPressure.ToString());
+            string tireDetails = string.Format("Manufacturer: {0}, Current Air Pressure: {1}\n",
+                    m_ManufacturerName, m_CurrentAirPressure);
             return tireDetails;
         }
     }

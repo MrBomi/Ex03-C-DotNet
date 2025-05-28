@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
@@ -12,16 +9,17 @@ namespace Ex03.GarageLogic
         private readonly string r_LicenseNumber;
         private float m_EnergyPrecentageLeft;
         private List<Tire> m_VehicleTires;
+        public const int k_SpecificVehiclePropertiesStartIndex = 8 ;
         protected EnergySource m_EnergySource { get; set; }
 
 
-        public Vehicle(string i_ModelName, string i_LicenseNumber,  List<Tire> i_VehiclesTires, EnergySource i_energySource)
+        public Vehicle(string i_ModelName, string i_LicenseNumber, List<Tire> i_VehiclesTires, EnergySource i_energySource)
         {
             r_ModelName = i_ModelName;
             r_LicenseNumber = i_LicenseNumber;
-            m_EnergyPrecentageLeft = calculateEnergyPrecentage();
             m_VehicleTires = i_VehiclesTires;
             m_EnergySource = i_energySource;
+            m_EnergyPrecentageLeft = calculateEnergyPrecentage();
         }
 
         public abstract void initVehicle(string[] i_VehicleProperties);
@@ -34,7 +32,8 @@ namespace Ex03.GarageLogic
         {
             if (float.TryParse(i_EnergyPrecentageLeft, out float energyPercentage))
             {
-                m_EnergyPrecentageLeft = energyPercentage;
+                m_EnergySource.m_CurrentEnergyLeft = energyPercentage;
+                    
             }
             else
             {
@@ -77,6 +76,12 @@ namespace Ex03.GarageLogic
             return m_EnergySource.m_CurrentEnergyLeft / m_EnergySource.m_MaxEnergyAmount;
         }
 
+        public virtual string SpecifVehiclePropertiesInfo()
+        {
+            return string.Empty;
+        }
+
+
         public override string ToString()
         {
             string vehicleDetails = string.Format(
@@ -85,11 +90,13 @@ namespace Ex03.GarageLogic
 
             foreach (Tire tire in m_VehicleTires)
             {
-                vehicleDetails += string.Format("Manufacturer: {0}",
-                    tire.ToString());
+                vehicleDetails += tire.ToString();
             }
 
             vehicleDetails += string.Format("Energy Source: {0}\n", m_EnergySource.ToString());
+            vehicleDetails += SpecifVehiclePropertiesInfo();
+
+
 
             return vehicleDetails;
         }
